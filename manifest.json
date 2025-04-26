@@ -1,0 +1,12 @@
+{
+    "manifest_version": 3,
+    "name": "文本朗读器",
+    "version": "1.0",
+    "description": "输入文本并按回车键进行朗读。",
+    "permissions": [
+        "tts"
+    ],
+    "action": {
+        "default_popup": "popup.html"
+    }
+}

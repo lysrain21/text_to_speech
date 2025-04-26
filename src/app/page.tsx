@@ -1,9 +1,65 @@
+'use client'; // 将组件标记为客户端组件
+
 import Image from "next/image";
+import { useState, KeyboardEvent, useEffect } from 'react'; // 导入 useEffect
 
 export default function Home() {
+  const [text, setText] = useState(''); // 添加状态来存储输入文本
+
+  // 处理语音合成的函数
+  const handleSpeak = () => {
+    console.log('handleSpeak called with text:', text); // 添加日志
+    if (!text.trim()) {
+      console.log('Text is empty, returning.'); // 添加日志
+      return;
+    }
+
+    // 检查浏览器是否支持 SpeechSynthesis
+    if ('speechSynthesis' in window) {
+      console.log('SpeechSynthesis supported.'); // 添加日志
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'zh-CN';
+
+      // 添加事件监听器以获取更多信息
+      utterance.onstart = () => console.log('Speech started...');
+      utterance.onend = () => console.log('Speech ended.');
+      utterance.onerror = (event) => console.error('SpeechSynthesis Error:', event); // 监听错误
+
+      console.log('Attempting to speak...'); // 添加日志
+      window.speechSynthesis.speak(utterance);
+    } else {
+      console.log('SpeechSynthesis not supported.'); // 添加日志
+      alert('抱歉，您的浏览器不支持语音合成。');
+    }
+  };
+
+  // 处理输入框的回车事件
+  const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
+    console.log('handleKeyDown called, key:', event.key); // 添加日志
+    if (event.key === 'Enter') {
+      console.log('Enter key pressed, calling handleSpeak.'); // 添加日志
+      handleSpeak();
+    }
+  };
+
+  // 检查可用的语音
+  useEffect(() => {
+    if ('speechSynthesis' in window) {
+      // 延迟获取，确保语音列表加载完成
+      setTimeout(() => {
+        const voices = window.speechSynthesis.getVoices();
+        console.log('Available voices:', voices);
+        const chineseVoice = voices.find(voice => voice.lang.startsWith('zh-CN'));
+        if (!chineseVoice) {
+          console.warn('No Chinese (zh-CN) voice found. Speech might use a default voice or fail.');
+        }
+      }, 100); // 延迟 100 毫秒
+    }
+  }, []);
+
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
+    <div className="grid grid-rows-[auto_1fr_auto] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
+      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start w-full max-w-lg"> {/* 调整主区域宽度 */}
         <Image
           className="dark:invert"
           src="/next.svg"
@@ -24,6 +80,22 @@ export default function Home() {
             Save and see your changes instantly.
           </li>
         </ol>
+
+        {/* 添加输入框和说明 */}
+        <div className="w-full mt-8">
+          <label htmlFor="text-input" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+            输入要朗读的文字：
+          </label>
+          <input
+            type="text"
+            id="text-input"
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+            onKeyDown={handleKeyDown} // 添加键盘事件监听
+            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            placeholder="在此输入文字，然后按回车键"
+          />
+        </div>
 
         <div className="flex gap-4 items-center flex-col sm:flex-row">
           <a

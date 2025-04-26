@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>文本朗读器</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            width: 250px;
+            padding: 10px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            margin-bottom: 10px;
+            padding: 5px;
+            box-sizing: border-box;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <label for="text-input">输入要朗读的文字：</label>
+    <input type="text" id="text-input" placeholder="在此输入文字，然后按回车键">
+    <script src="popup.js"></script> <!-- 引入我们的 JavaScript 文件 -->
+</body>
+
+</html>
