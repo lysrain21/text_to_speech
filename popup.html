@@ -5,30 +5,121 @@
     <meta charset="UTF-8">
     <title>文本朗读器</title>
     <style>
-        body {
-            font-family: sans-serif;
-            width: 250px;
-            padding: 10px;
+        :root {
+            --primary-color: #007bff;
+            /* 蓝色，用于强调和交互 */
+            --primary-hover-color: #0056b3;
+            --text-color: #212529;
+            /* 深灰色文本 */
+            --label-color: #495057;
+            /* 稍浅的标签文本 */
+            --background-color: #f8f9fa;
+            /* 浅灰色背景 */
+            --border-color: #ced4da;
+            /* 边框颜色 */
+            --focus-ring-color: rgba(0, 123, 255, 0.25);
+            /* 聚焦时的光晕 */
         }
 
-        input[type="text"] {
-            width: 100%;
-            margin-bottom: 10px;
-            padding: 5px;
-            box-sizing: border-box;
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            /* 使用系统默认字体 */
+            width: 320px;
+            /* 保持合适的宽度 */
+            padding: 20px;
+            /* 增加内边距 */
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.5;
+            /* 改善可读性 */
+        }
+
+        /* 移除默认边距 */
+        body,
+        label,
+        textarea,
+        button {
+            margin: 0;
         }
 
         label {
             display: block;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
+            /* 标签和输入框间距 */
+            font-size: 14px;
+            font-weight: 600;
+            /* 稍加粗 */
+            color: var(--label-color);
+        }
+
+        textarea#text-input {
+            width: 100%;
+            height: 100px;
+            /* 进一步增加高度 */
+            padding: 10px;
+            /* 增加内边距 */
+            box-sizing: border-box;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            /* 更圆润的边角 */
+            font-size: 16px;
+            /* 增大字体，方便阅读 */
+            line-height: 1.4;
+            resize: vertical;
+            margin-bottom: 15px;
+            /* 与下方按钮的间距 */
+            background-color: #fff;
+            /* 白色背景 */
+            color: var(--text-color);
+            transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+            /* 平滑过渡 */
+        }
+
+        /* 聚焦样式 */
+        textarea#text-input:focus {
+            border-color: var(--primary-color);
+            outline: 0;
+            box-shadow: 0 0 0 0.2rem var(--focus-ring-color);
+        }
+
+        /* 添加一个清晰的朗读按钮 */
+        button#speak-button {
+            display: block;
+            /* 独占一行 */
+            width: 100%;
+            padding: 12px 15px;
+            /* 增大按钮内边距，使其更容易点击 */
+            font-size: 16px;
+            font-weight: 600;
+            color: #fff;
+            background-color: var(--primary-color);
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            text-align: center;
+            transition: background-color 0.15s ease-in-out;
+            /* 平滑过渡 */
+        }
+
+        button#speak-button:hover {
+            background-color: var(--primary-hover-color);
+        }
+
+        /* 按钮聚焦样式 */
+        button#speak-button:focus {
+            outline: 0;
+            box-shadow: 0 0 0 0.2rem var(--focus-ring-color);
         }
     </style>
 </head>
 
 <body>
-    <label for="text-input">输入要朗读的文字：</label>
-    <input type="text" id="text-input" placeholder="在此输入文字，然后按回车键">
-    <script src="popup.js"></script> <!-- 引入我们的 JavaScript 文件 -->
+    <label for="text-input">输入文字，按回车或点击按钮朗读：</label>
+    <textarea id="text-input" placeholder="请在这里输入..."></textarea>
+    <!-- 添加朗读按钮 -->
+    <button id="speak-button">朗读</button>
+
+    <script src="popup.js"></script>
 </body>
 
 </html>
